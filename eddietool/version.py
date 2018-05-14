@@ -1,4 +1,4 @@
-'''
+"""
 File             : version.py
 
 Start Date       : 20071209
@@ -7,7 +7,7 @@ Refactor Date    : 20180514
 Description      : Version info
 
 $Id: version.py 953 2018-05-14 02:07:01Z phillips.ryan $
-'''
+"""
 __version__ = '$Revision: 953 $'
 
 __copyright__ = 'Copyright (c) Ryan Phillips 2018'
