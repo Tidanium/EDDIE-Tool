@@ -1,0 +1,6 @@
+"""Command-line entry point for use during development."""
+
+from eddietool.commands import agent
+
+if __name__ == "__main__":
+    agent()
