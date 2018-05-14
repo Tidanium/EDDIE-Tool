@@ -1,12 +1,12 @@
 '''
-File             : version.py
+File             : ack.py
 
-Start Date       : 20071209
+Start Date       : 20000124
 Refactor Date    : 20180514
 
-Description      : Version info
+Description      : Acknowledgement objects to track problem acknowledgements.
 
-$Id: version.py 953 2018-05-14 02:07:01Z phillips.ryan $
+$Id: ack.py 953 2018-05-14 05:00:08Z phillips.ryan $
 '''
 __version__ = '$Revision: 953 $'
 
@@ -17,6 +17,7 @@ __author_email__ = 'miles.chris@gmail.com'
 
 __maintainer__ = 'Ryan Phillips aka Tidanium'
 __maintainer_email__ = 'ryan@ryanphillips.org'
+__refactor_note__ = 'I have no clue what this is for, personally'
 
 __license__ = """
 MIT License
@@ -40,4 +41,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-version = '2.0.0a1-dev'
+import time
+
+class ack:
+  """The ack(nowledgement) class to keep state of last acknowledgement."""
+  def __init__(self):
+    self.state = 'n'
+    self.time = None
+    self.user = None
+    self.details = None
+    self.clear()
+    
+  def clear(self):
+    """Clear all acknowledgement information."""
+    self.state = 'n'
+    self.time = None
+    self.user = None
+    self.details = None
+  
+  def set(self, user=None, details=None):
+    """Set a user acknowledgement."""
+    self.clear()
+    
+    self.state = 'y'
+    self.time = time.localtime(time.time())
+    self.user = user
+    self.details = details

@@ -12,7 +12,6 @@ setup(name='EDDIE-Tool',
   long_description="""\
   The EDDIE Tool can perform all basic system monitoring checks, such as: file system; processes; system load; and network configuration. It can also perform such network monitoring tasks as: ping checks; HTTP checks; POP3 tests; SNMP queries; RADIUS authentication tests; and customized TCP port checks. Finally, a few checks lend themselves to security monitoring: watching files for changes; and scanning logfiles. The EDDIE Tool can also send any collected statistic to RRD files to be displayed graphically by any standard RRD tool. No need to run multiple monitoring and data collection agents. Monitoring rules are just like Python expressions and can be as simple or as complex as needed. Advanced alert control functionality such as exponential back-off and dependencies are also standard.""",
   author=version.__author__,
-  author_email=version.__author_email__,
   maintainer=version.__maintainer__,
   maintainer_email=version.__maintainer_email__,
   url='https://github.com/Tidanium/EDDIE-Tool',
