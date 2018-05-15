@@ -41,32 +41,26 @@ SOFTWARE.
 """
 
 import logging, asyncio
-from . import config
-
-from . import utils
+from . import config, utils
 def log():
-  logger = logging.getLogger(utils.Config.getConfigVariable('logging', 'name'))
+  name = utils.Config.getConfigVariable('logging','name') if utils.Config.getConfigVariable('logging', 'logfilename') == '' else name = utils.Config.getConfigVariable('logging', 'logfilename')
+  logger = logging.getLogger(name)
   logger.setLevel(utils.Config.getConfigVariable('logging', ''))
 
 class logEvent:
   
-  @staticmethod
-  def critical(msg, *args, **kwargs):
+  def critical(self, msg, *args, **kwargs):
     return logging.critical(msg, *args, **kwargs)
   
-  @staticmethod
-  def debug(msg, *args, **kwargs):
+  def debug(self, msg, *args, **kwargs):
     return logging.debug(msg, *args, **kwargs)
   
-  @staticmethod
-  def error(msg, *args, **kwargs):
+  def error(self, msg, *args, **kwargs):
     return logging.error(msg, *args, **kwargs)
   
-  @staticmethod
-  def info(msg, *args, **kwargs):
+  def info(self, msg, *args, **kwargs):
     return logging.info(msg, *args, **kwargs)
 
-  @staticmethod
-  def warning(msg, *args, **kwargs):
+  def warning(self, msg, *args, **kwargs):
     return logging.warning(msg, *args, **kwargs)
   
