@@ -49,7 +49,7 @@ class ParseFailure(Exception):
 
 
 
-if getConfigVariable('.config', 'rescanconfig') is True:
+if utils.Config.getConfigVariable('.config', 'rescanconfig') is True:
   scanPeriod = utils.valToSeconds(getConfigVariable('.config', 'scanperiod'))
 else:
   scanPeriod = False
@@ -57,17 +57,39 @@ else:
 class Config:
   """The main Eddie configuration class."""
   def __init__(self, name:str, parent=None):
-    def configDict():
-      config = utils.Config.config
     self.name = utils.Config.getConfigVariable('.config', 'name')
+    if len(name) < 1:
+      raise SyntaxError
     self.type = utils.Config.getConfigVariable('.config', 'type')
-    self.display = True if 'true' in getConfigVariable('.config', 'displayedconfigonce?') else False
+    self.display = utils.Config.getConfigVariable('.config', 'displayedconfigonce?')
     
     self.groupDirectives = {}
+    self.MDict = definition.MsgDict()
+    if parent != None:
+      self.MDict.update(parent.MDict)
+      
+    self.aliasDict = {}
+    self.NDict = {}
+    self.classDict  = {}
     
+    self.groups = []
     self.configfiles = {
       "mainconfig": f"{Main.relpath}/config/config.ini",
       "dictconfig": f"{Main.relpath}/config/config.json",
       "gitconfig": f"{Main.relpath}/config/gitconfig.ini"
     }
     self.parent = parent
+    if parent != None:
+      self.aliasDict.update(parent.aliasDict)
+      self.NDict.update(parent.NDict)
+    
+  def __str__(self):
+    s = f"<Config name='{self.name}' type='{self.type}'"
+    s +=f"\n groupDirectives: {self.groupDirectives}"
+    s +=f"\n groups:          {', '.join([i for i in self.groups])}"
+    s +=f"\n MDict:           {', '.join([i for i in self.MDict])}"
+    s +=f"\n aliasDict:       {self.aliasDict}"
+    s +=f"\n NDict:           {', '.join([i for i in self.NDict])}"
+    s +=f"\n classDict:       {self.classDict}"
+    s += "\nConfig end>"
+    return s
