@@ -79,14 +79,12 @@ class Config:
   def getConfigVariable(section: str, option: str):
     section = section.upper()
     option = option.lower()
-    try: get = config.getboolean(section, option)
+    try: get = config.getfloat(section, option)
     except ValueError:
-      try: get = config.getint(section, option)
+      try: get = config.getboolean(section, option)
       except ValueError:
-        try: get = config.getfloat(section, option)
-        except ValueError:
-          try: get = config.get(section, option)
-          except: raise KeyError
+        try: get = config.get(section, option)
+        except: raise KeyError
     except configparser.NoSectionError as e:
       log.logEvent.info(e)
     except configparser.NoOptionError as e:
@@ -105,7 +103,30 @@ class Config:
     if not config.has_section(section):
       log.logEvent.info(f'Config = Added [{section}]'); return config.add_section(section)
     elif config.has_section(section) and not config.has_option(section, option):
-      l = [sect for sect in config.sections() if sect != 'DEFAULT']
+      s = ''
+      for sect in config.sections():
+        if sect != 'DEFAULT' and sect != section:
+          s += f'[{sect}]\n'
+          for opt in config.options(sect):
+            val = config.get(sect, opt)
+            s += f'{opt}={val}\n'
+      for sect in config.sections():
+        if sect == section:
+          s += f'[{sect}]\n'
+          for opt in config.options(section):
+            val = config.get(section, opt)
+            s += f'{opt}={val}\n'
+      s += f'{option}={toSet}\n'
+      with open('config/config.ini','w') as f:
+        f.write(s); log.logEvent.info(f'Overwrote config.ini with:\n{s}')
+        f.close()
+      del sect, opt, s; return log.logEvent.info('Cleaned up via `del sect, opt, s`')
+    elif config.has_option(section, option) and toSet != None:
+      oldOpt = config.get(section, option)
+      config.set(section, option, toSet)
+      log.logEvent.info(f'Changed [{section}]{option} from {oldOpt} to {toSet}')
+      del oldOpt; log.logEvent.info('Cleaned up via `del oldOpt`')
+    
       
       
 
@@ -294,11 +315,11 @@ class safe:
       NOTE: safe_pclose() _must_ be called or the semaphore will never be
       released."""
     
-    systemCallSemaphore.acquire()
+    self.systemCallSemaphore.acquire()
     try:
       r = os.popen(cmd, mode)
     except:
-      systemCallSemaphore.release()
+      self.systemCallSemaphore.release()
       e = sys.exc_info()
       raise e[0] and e[1]
     
